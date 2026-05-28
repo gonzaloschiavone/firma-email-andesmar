@@ -185,15 +185,18 @@
     const companies = {
       andesmar: {
         color: '#2f6beb',
-        signatureLogo: BASE + 'Presentació-andesmar.png'
+        signatureLogo: BASE + 'Presentació-andesmar.png',
+        website: { url: 'https://www.andesmar.com/', display: 'andesmar.com' }
       },
       cargas: {
         color: '#004d93',
-        signatureLogo: BASE + 'logo animado.gif'
+        signatureLogo: BASE + 'logo animado.gif',
+        website: { url: 'https://andesmarcargas.com/', display: 'andesmarcargas.com' }
       },
       industrial: {
         color: '#ff4202',
-        signatureLogo: BASE + 'logo-industrial-andesmar.png'
+        signatureLogo: BASE + 'logo-industrial-andesmar.png',
+        website: { url: 'https://andesmarindustrial.com/', display: 'andesmarindustrial.com/' }
       }
     };
 
@@ -216,6 +219,7 @@
 
     let signatureData = {
       name: '', job: '', phone: '', address: '',
+      website: { url: 'https://andesmarcargas.com/', display: 'andesmarcargas.com' },
       accentColor: '#004d93',
       logoUrl: BASE + 'logo animado.gif'
     };
@@ -238,6 +242,7 @@
 
       signatureData.accentColor = company.color;
       signatureData.logoUrl = company.signatureLogo;
+      signatureData.website = company.website;
 
       // Cargar datos guardados de la empresa seleccionada
       loadFormData(key);
@@ -303,6 +308,23 @@
       const phone   = signatureData.phone   || defaultData.phone;
       const address = signatureData.address || defaultData.address;
       const logoSrc = signatureData.logoUrl;
+      const website = signatureData.website;
+
+      const phoneSvg = `<svg width="13" height="13" viewBox="0 0 290.024 512.065" xmlns="http://www.w3.org/2000/svg"><path fill="${color}" d="M290.014,256.066c0,71.981,0.015,143.962-0.009,215.944c-0.006,19.49-10.183,33.778-27.699,38.578c-3.799,1.041-7.893,1.4-11.852,1.405c-70.315,0.081-140.63,0.093-210.945,0.04c-23.662-0.018-39.475-15.857-39.481-39.575C-0.009,328.162-0.01,183.866,0.03,39.571C0.036,15.869,15.875,0.055,39.56,0.038c70.315-0.051,140.63-0.051,210.945,0c23.635,0.017,39.472,15.887,39.489,39.584C290.048,111.77,290.014,183.918,290.014,256.066z M261.662,393.521c0-110.253,0-220.241,0-330.101c-78.059,0-155.754,0-233.272,0c0,110.263,0,220.127,0,330.101C106.33,393.521,183.895,393.521,261.662,393.521z M145.058,40.708c16.478,0,32.956,0.016,49.434-0.008c6.126-0.009,8.457-2.502,8.5-8.924c0.043-6.496-2.201-8.962-8.302-8.965c-33.122-0.014-66.246,0.142-99.366-0.128c-6.874-0.056-8.135,3.886-8.218,9.142c-0.101,6.414,2.352,8.867,8.518,8.876C112.102,40.723,128.58,40.708,145.058,40.708z M144.894,475.085c13.125,0.054,24.003-10.774,23.888-23.779c-0.114-12.948-10.655-23.41-23.642-23.463c-13.201-0.054-24.028,10.685-23.909,23.715C121.349,464.427,132.015,475.032,144.894,475.085z"/></svg>`;
+
+      const geoSvg = `<svg width="13" height="13" viewBox="0 0 381.736 512.395" xmlns="http://www.w3.org/2000/svg"><path fill="${color}" d="M0.008,186.148C1.868,130.432,29.507,72.201,89.21,31.117c65.44-45.032,156.447-40.792,217.392,10.152c55.708,46.566,79.46,106.889,74.492,178.843c-2.66,38.528-16.992,73.184-37.93,105.005c-36.152,54.943-72.823,109.551-109.835,163.919c-21.291,31.276-63.437,31.087-84.92-0.216c-23.552-34.318-46.35-69.152-69.431-103.792c-15.601-23.414-31.814-46.458-46.517-70.425C11.342,280.176-0.345,242.673,0.008,186.148z M191.09,267.458c37.196-0.046,67.277-30.113,67.395-67.365c0.119-37.244-30.335-67.688-67.691-67.669c-37.194,0.019-67.667,30.742-67.409,67.963C123.642,237.592,153.837,267.504,191.09,267.458z"/></svg>`;
+
+      const mundoSvg = `<svg width="13" height="13" viewBox="0 0 514 512.395" xmlns="http://www.w3.org/2000/svg"><path fill="${color}" d="M15.841,268.829c42.655,0,84.74,0,126.502,0c2.786,30.02,5.563,59.935,8.401,90.504c-31.038,6.003-60.397,18.318-87.622,36.75C34.974,358.08,19.389,315.921,15.841,268.829z M142.337,236.46c-41.707,0-83.653,0-126.429,0c3.344-47.005,19.036-89.082,46.464-126.382c14.618,7.46,28.546,15.625,43.306,21.801c14.631,6.123,30.101,10.242,44.97,15.163C147.942,176.156,145.16,206.092,142.337,236.46z M367.762,236.283c-2.806-30.192-5.589-60.137-8.415-90.554c31.511-5.443,60.94-17.642,87.994-36.169c27.896,37.915,43.409,79.867,46.907,126.723C451.633,236.283,409.401,236.283,367.762,236.283z M494.253,268.829c-3.513,46.926-19.043,88.878-46.13,125.736c-14.76-7.486-28.732-15.701-43.578-21.784c-14.672-6.012-30.227-9.871-45.086-14.577c2.71-29.173,5.492-59.119,8.303-89.375C409.27,268.829,451.371,268.829,494.253,268.829z M174.347,268.82c54.25,0,106.986,0,160.312,0c-0.58,28.342-3.056,56.389-7.661,83.813c-24.112-1.289-47.968-3.557-71.823-3.561c-23.878-0.003-47.756,2.257-73.039,3.6C179.602,325.396,177.007,297.459,174.347,268.82z M327.866,151.095c2.662,28.775,5.246,56.714,7.876,85.136c-54.084,0-106.945,0-159.798,0c-1.52-10.742,3.499-68.693,7.754-84.915C231.111,158.316,278.697,158.289,327.866,151.095z M319.786,119.987c-43.257,5.92-86.345,5.841-130.222-0.079c1.923-7.185,3.532-13.927,5.535-20.551c7.348-24.303,15.873-48.132,31.714-68.442c3.937-5.048,8.797-9.624,13.973-13.403c9.349-6.824,19.217-6.477,28.843,0.003c9.069,6.105,15.51,14.595,21.038,23.765c14.42,23.921,22.897,50.149,29.373,77.117C320.109,118.686,319.948,119.03,319.786,119.987z M189.635,385.291c43.863-5.977,86.956-5.967,130.688-0.018c-0.821,3.526-1.463,6.726-2.316,9.869c-6.955,25.623-15.248,50.741-30.216,72.995c-3.958,5.884-8.723,11.439-13.977,16.194c-12.357,11.181-25.412,11.532-37.415-0.085c-7.66-7.413-14.337-16.275-19.753-25.488C203.387,436.21,195.954,411.338,189.635,385.291z M315.604,20.624c43.204,11.661,79.48,32.784,110.698,64.053c-22.69,15.34-46.991,25.294-74.141,29.799C344.154,81.94,334.194,50.181,315.604,20.624z M315.561,484.591c18.654-29.669,28.585-61.307,36.574-93.861c27.064,4.406,51.328,14.466,74.156,29.752C395.202,451.726,358.925,472.809,315.561,484.591z M84.411,420.647c15.905-12.543,53.062-27.574,72.907-29.67c4.949,15.88,9.152,31.996,15.028,47.476c5.877,15.484,13.427,30.334,20.05,45.032C170.499,483.52,106.561,446.79,84.411,420.647z M157.957,114.674c-26.844-5.12-50.965-15.007-74.001-30.028c31.014-31.228,67.304-52.258,110.551-63.985C175.945,50.277,165.948,81.877,157.957,114.674z"/></svg>`;
+
+      const iconRow = (svg, content) =>
+        `<tr><td style="padding:2px 0;vertical-align:middle;line-height:1.4;">
+          <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+            <tr>
+              <td style="width:20px;vertical-align:middle;padding-right:4px;text-align:center;">${svg}</td>
+              <td style="vertical-align:middle;">${content}</td>
+            </tr>
+          </table>
+        </td></tr>`;
 
       return `
         <table cellpadding="0" cellspacing="0" border="0" style="font-family:'Montserrat',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.25;color:#334155;font-size:13px;max-width:550px;border-collapse:collapse;">
@@ -312,21 +334,16 @@
             </td>
             <td style="width:1px;padding:0;vertical-align:middle;">
               <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;">
-                <tr><td style="width:2px;height:70px;background-color:${color};font-size:1px;line-height:1px;padding:0;">&nbsp;</td></tr>
+                <tr><td style="width:2px;height:95px;background-color:${color};font-size:1px;line-height:1px;padding:0;">&nbsp;</td></tr>
               </table>
             </td>
             <td style="vertical-align:middle;padding-left:22px;">
               <div style="font-size:16px;font-weight:700;color:${color};margin:0 0 2px 0;letter-spacing:-0.2px;font-family:'Montserrat',Arial,sans-serif;">${name}</div>
               <div style="font-size:10px;color:#64748b;font-weight:600;margin:0 0 6px 0;text-transform:uppercase;letter-spacing:0.5px;font-family:'Montserrat',Arial,sans-serif;">${job}</div>
               <table cellpadding="0" cellspacing="0" border="0" style="font-size:12px;color:#475569;width:100%;font-family:'Montserrat',Arial,sans-serif;">
-                ${phone ? `<tr><td style="padding:1px 0;vertical-align:top;line-height:1.2;">
-                  <span style="font-size:10px;font-weight:800;color:${color};font-family:'Montserrat',Arial,sans-serif;margin-right:6px;display:inline-block;width:24px;">TEL</span>
-                  <span style="color:#475569;font-weight:500;">${phone}</span>
-                </td></tr>` : ''}
-                ${address ? `<tr><td style="padding:1px 0;vertical-align:top;line-height:1.2;">
-                  <span style="font-size:10px;font-weight:800;color:${color};font-family:'Montserrat',Arial,sans-serif;margin-right:6px;display:inline-block;width:24px;">DIR</span>
-                  <span style="color:#64748b;font-weight:400;">${address}</span>
-                </td></tr>` : ''}
+                ${phone ? iconRow(phoneSvg, `<span style="color:#475569;font-weight:500;">${phone}</span>`) : ''}
+                ${address ? iconRow(geoSvg, `<span style="color:#64748b;font-weight:400;">${address}</span>`) : ''}
+                ${iconRow(mundoSvg, `<a href="${website.url}" style="color:#64748b;font-weight:400;text-decoration:none;">${website.display}</a>`)}
               </table>
             </td>
           </tr>
