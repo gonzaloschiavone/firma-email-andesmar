@@ -380,9 +380,9 @@
 
       const ICONS = 'https://gonzaloschiavone.github.io/firma-email-andesmar/Assets/';
       const imgIcon = (file) => `<img src="${ICONS}${file}" width="13" height="13" style="display:block;" alt="">`;
-      const phoneIcon = forCopy ? imgIcon('mobile.svg') : phoneSvg;
-      const geoIcon   = forCopy ? imgIcon('geo.svg')    : geoSvg;
-      const mundoIcon = forCopy ? imgIcon('mundo.svg')  : mundoSvg;
+      const phoneIcon = forCopy ? imgIcon(`mobile-${selectedCompany}.png`) : phoneSvg;
+      const geoIcon   = forCopy ? imgIcon(`geo-${selectedCompany}.png`)    : geoSvg;
+      const mundoIcon = forCopy ? imgIcon(`mundo-${selectedCompany}.png`)  : mundoSvg;
 
       const iconRow = (icon, content) =>
         `<tr><td style="padding:2px 0;vertical-align:middle;line-height:1.4;">
