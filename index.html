@@ -180,18 +180,20 @@
 
   <script>
     // ── Configuración de empresas ──────────────────────────────────────────
+    const BASE = 'https://gonzaloschiavone.github.io/firma-email-andesmar/assets/';
+
     const companies = {
       andesmar: {
         color: '#2f6beb',
-        signatureLogo: 'assets/Presentació-andesmar.png'
+        signatureLogo: BASE + 'Presentació-andesmar.png'
       },
       cargas: {
         color: '#004d93',
-        signatureLogo: 'assets/logo animado.gif'
+        signatureLogo: BASE + 'logo animado.gif'
       },
       industrial: {
         color: '#ff4202',
-        signatureLogo: 'assets/logo-industrial-andesmar.png'
+        signatureLogo: BASE + 'logo-industrial-andesmar.png'
       }
     };
 
@@ -215,7 +217,7 @@
     let signatureData = {
       name: '', job: '', phone: '', address: '',
       accentColor: '#004d93',
-      logoUrl: 'assets/logo animado.gif'
+      logoUrl: BASE + 'logo animado.gif'
     };
 
     // ── Inicialización ─────────────────────────────────────────────────────
