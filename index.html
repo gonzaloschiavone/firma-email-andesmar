@@ -366,7 +366,11 @@
       const job     = signatureData.job     || defaultData.job;
       const phone   = signatureData.phone   || defaultData.phone;
       const address = signatureData.address || defaultData.address;
-      const logoSrc = signatureData.logoUrl;
+      const ABS_ASSETS = 'https://gonzaloschiavone.github.io/firma-email-andesmar/Assets/';
+      const rawLogo = signatureData.logoUrl;
+      const logoSrc = forCopy
+        ? rawLogo.replace(/^Assets\//, ABS_ASSETS)
+        : rawLogo;
       const website = signatureData.website;
 
       const lbl = (text) =>
@@ -424,7 +428,7 @@
       temp.innerHTML = buildSignatureHTML(true);
       document.body.appendChild(temp);
       const range = document.createRange();
-      range.selectNode(temp);
+      range.selectNodeContents(temp);
       const selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
