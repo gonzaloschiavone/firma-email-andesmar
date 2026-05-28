@@ -13,6 +13,12 @@
     .tab-btn.active { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
     .tab-btn.inactive { opacity: 0.45; filter: grayscale(0.3); }
     .tab-btn.inactive:hover { opacity: 0.7; }
+    .toggle-track { width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background-color 0.2s;flex-shrink:0; }
+    .toggle-track.on  { background-color:#22c55e; }
+    .toggle-track.off { background-color:#d1d5db; }
+    .toggle-thumb { width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;transition:left 0.2s;box-shadow:0 1px 4px rgba(0,0,0,0.25); }
+    .toggle-thumb.on  { left:22px; }
+    .toggle-thumb.off { left:2px; }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col">
@@ -96,12 +102,32 @@
             <input type="text" id="input-job" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 text-sm" value="" placeholder="Cargo o Sector/Departamento">
           </div>
           <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1" for="input-phone">Teléfono de Contacto</label>
-            <input type="text" id="input-phone" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 text-sm font-mono" value="" placeholder="Ej: +54 261 000-0000">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-500" for="input-phone">Teléfono de Contacto</label>
+              <div class="flex items-center gap-2 cursor-pointer" onclick="toggleField('phone')">
+                <span id="toggle-phone-label" class="text-xs font-semibold" style="color:#16a34a;">Activo</span>
+                <div id="toggle-phone-track" class="toggle-track on">
+                  <div id="toggle-phone-thumb" class="toggle-thumb on"></div>
+                </div>
+              </div>
+            </div>
+            <div id="field-phone-wrap">
+              <input type="text" id="input-phone" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 text-sm font-mono" value="" placeholder="Ej: +54 261 000-0000">
+            </div>
           </div>
           <div>
-            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1" for="input-address">Dirección de Oficina</label>
-            <input type="text" id="input-address" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 text-sm" value="" placeholder="Ej: Rodriguez Peña 2255, Godoy Cruz, Mendoza">
+            <div class="flex items-center justify-between mb-1">
+              <label class="text-xs font-semibold uppercase tracking-wider text-slate-500" for="input-address">Dirección de Oficina</label>
+              <div class="flex items-center gap-2 cursor-pointer" onclick="toggleField('address')">
+                <span id="toggle-address-label" class="text-xs font-semibold" style="color:#16a34a;">Activo</span>
+                <div id="toggle-address-track" class="toggle-track on">
+                  <div id="toggle-address-thumb" class="toggle-thumb on"></div>
+                </div>
+              </div>
+            </div>
+            <div id="field-address-wrap">
+              <input type="text" id="input-address" class="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 text-sm" value="" placeholder="Ej: Rodriguez Peña 2255, Godoy Cruz, Mendoza">
+            </div>
           </div>
         </div>
       </div>
@@ -180,7 +206,9 @@
 
   <script>
     // ── Configuración de empresas ──────────────────────────────────────────
-    const BASE = 'https://gonzaloschiavone.github.io/firma-email-andesmar/Assets/';
+    const BASE = window.location.protocol === 'file:'
+      ? 'Assets/'
+      : 'https://gonzaloschiavone.github.io/firma-email-andesmar/Assets/';
 
     const companies = {
       andesmar: {
@@ -190,7 +218,7 @@
       },
       cargas: {
         color: '#004d93',
-        signatureLogo: BASE + 'logo animado.gif',
+        signatureLogo: BASE + 'logo%20animado_02.gif',
         website: { url: 'https://andesmarcargas.com/', display: 'andesmarcargas.com' }
       },
       industrial: {
@@ -208,6 +236,11 @@
     };
 
     let selectedCompany = null;
+    const fieldEnabled = {
+      andesmar:   { phone: true, address: true },
+      cargas:     { phone: true, address: true },
+      industrial: { phone: true, address: true }
+    };
 
     // ── Datos por defecto para la preview ─────────────────────────────────
     const defaultData = {
@@ -221,7 +254,7 @@
       name: '', job: '', phone: '', address: '',
       website: { url: 'https://andesmarcargas.com/', display: 'andesmarcargas.com' },
       accentColor: '#004d93',
-      logoUrl: BASE + 'logo animado.gif'
+      logoUrl: BASE + 'logo%20animado_02.gif'
     };
 
     // ── Inicialización ─────────────────────────────────────────────────────
@@ -244,8 +277,9 @@
       signatureData.logoUrl = company.signatureLogo;
       signatureData.website = company.website;
 
-      // Cargar datos guardados de la empresa seleccionada
+      // Cargar datos y estado de toggles de la empresa seleccionada
       loadFormData(key);
+      syncToggleUI();
 
       // Actualizar tabs
       Object.keys(companies).forEach(k => {
@@ -276,6 +310,31 @@
         document.getElementById('input-' + field).value = data[field];
         signatureData[field] = data[field];
       });
+    }
+
+    // ── Toggle campos opcionales ──────────────────────────────────────────
+    function syncToggleUI() {
+      ['phone', 'address'].forEach(field => {
+        const active = fieldEnabled[selectedCompany][field];
+        document.getElementById('toggle-' + field + '-track').className = 'toggle-track ' + (active ? 'on' : 'off');
+        document.getElementById('toggle-' + field + '-thumb').className = 'toggle-thumb ' + (active ? 'on' : 'off');
+        const label = document.getElementById('toggle-' + field + '-label');
+        label.textContent = active ? 'Activo' : 'Inactivo';
+        label.style.color = active ? '#16a34a' : '#9ca3af';
+        document.getElementById('field-' + field + '-wrap').style.display = active ? '' : 'none';
+      });
+    }
+
+    function toggleField(field) {
+      fieldEnabled[selectedCompany][field] = !fieldEnabled[selectedCompany][field];
+      const active = fieldEnabled[selectedCompany][field];
+      document.getElementById('toggle-' + field + '-track').className = 'toggle-track ' + (active ? 'on' : 'off');
+      document.getElementById('toggle-' + field + '-thumb').className = 'toggle-thumb ' + (active ? 'on' : 'off');
+      const label = document.getElementById('toggle-' + field + '-label');
+      label.textContent = active ? 'Activo' : 'Inactivo';
+      label.style.color = active ? '#16a34a' : '#9ca3af';
+      document.getElementById('field-' + field + '-wrap').style.display = active ? '' : 'none';
+      updateSignatureUI();
     }
 
     // ── Listeners de inputs ────────────────────────────────────────────────
@@ -332,17 +391,12 @@
             <td style="vertical-align:middle;padding-right:22px;">
               <img src="${logoSrc}" width="120" style="display:block;max-width:120px;height:auto;border:0;" alt="Logo">
             </td>
-            <td style="width:1px;padding:0;vertical-align:middle;">
-              <table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;margin:0 auto;">
-                <tr><td style="width:2px;height:95px;background-color:${color};font-size:1px;line-height:1px;padding:0;">&nbsp;</td></tr>
-              </table>
-            </td>
-            <td style="vertical-align:middle;padding-left:22px;">
+            <td style="vertical-align:middle;padding-left:22px;border-left-width:2px;border-left-style:solid;border-left-color:${color};">
               <div style="font-size:16px;font-weight:700;color:${color};margin:0 0 2px 0;letter-spacing:-0.2px;font-family:'Montserrat',Arial,sans-serif;">${name}</div>
               <div style="font-size:10px;color:#64748b;font-weight:600;margin:0 0 6px 0;text-transform:uppercase;letter-spacing:0.5px;font-family:'Montserrat',Arial,sans-serif;">${job}</div>
               <table cellpadding="0" cellspacing="0" border="0" style="font-size:12px;color:#475569;width:100%;font-family:'Montserrat',Arial,sans-serif;">
-                ${phone ? iconRow(phoneSvg, `<span style="color:#475569;font-weight:500;">${phone}</span>`) : ''}
-                ${address ? iconRow(geoSvg, `<span style="color:#64748b;font-weight:400;">${address}</span>`) : ''}
+                ${fieldEnabled[selectedCompany].phone ? iconRow(phoneSvg, `<span style="color:#475569;font-weight:500;">${phone}</span>`) : ''}
+                ${fieldEnabled[selectedCompany].address ? iconRow(geoSvg, `<span style="color:#64748b;font-weight:400;">${address}</span>`) : ''}
                 ${iconRow(mundoSvg, `<a href="${website.url}" style="color:#64748b;font-weight:400;text-decoration:none;">${website.display}</a>`)}
               </table>
             </td>
